@@ -1,0 +1,15 @@
+# Build outputs — never commit these
+*/build/output/
+*/build/*.qcow2
+*/build/*.vmdk
+*/build/*.ova
+
+# Packer vars file — auto-generated per machine
+*/build/build.auto.pkrvars.hcl
+
+# Packer cache
+.packer_cache/
+
+# OS
+.DS_Store
+Thumbs.db
