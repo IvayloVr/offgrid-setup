@@ -28,12 +28,12 @@ variable "version" {
 variable "kali_iso_url" {
   type    = string
   # Full installer — not netinst
-  default = "https://cdimage.kali.org/current/kali-linux-2026.1-installer-amd64.iso"
+  default = "https://cdimage.kali.org/current/kali-linux-2026.2-installer-amd64.iso"
 }
 
 variable "kali_iso_checksum" {
   type    = string
-  default = "sha256:271477ad6ea2676c7346576971b9acc2d32fabd9c2bbaf0e6302397626149306"
+  default = "sha256:6dbefacc95e3b556c19c48e8bae39b8b505e2d3a1aba0bfb7ab62b036c3d2ba3"
 }
 
 variable "vm_memory" {
