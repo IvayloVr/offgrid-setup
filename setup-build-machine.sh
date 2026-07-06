@@ -163,9 +163,16 @@ install_debian() {
         | gpg --dearmor \
         | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
 
-    # Add HashiCorp repo
+    # Kali returns 'kali-rolling' from lsb_release which HashiCorp doesn't have
+    # Use bookworm (Kali's Debian base) instead
+    if [[ "${OS_ID}" == "kali" ]]; then
+        HASHICORP_CODENAME="bookworm"
+    else
+        HASHICORP_CODENAME=$(lsb_release -cs)
+    fi
+
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
-https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+https://apt.releases.hashicorp.com ${HASHICORP_CODENAME} main" \
         | tee /etc/apt/sources.list.d/hashicorp.list
 
     apt-get update -qq
