@@ -40,7 +40,7 @@ case "${OS_ID}" in
     fedora)
         DISTRO="fedora"
         ;;
-    ubuntu|debian|linuxmint|pop)
+    ubuntu|debian|linuxmint|pop|kali)
         DISTRO="debian"
         ;;
     *)
@@ -143,7 +143,7 @@ install_debian() {
 
     step "Installing QEMU/KVM"
     apt-get install -y -qq \
-        qemu-system-x86_64 \
+        qemu-system \
         qemu-kvm \
         qemu-utils \
         libvirt-daemon-system \
@@ -211,7 +211,7 @@ step "Verifying installation"
 FAILED=()
 
 command -v packer             &>/dev/null && log "✓ packer $(packer --version)" || FAILED+=("packer")
-command -v qemu-system-x86_64 &>/dev/null && log "✓ qemu-system-x86_64"        || FAILED+=("qemu-system-x86_64")
+command -v qemu-system-x86_64 &>/dev/null || command -v qemu-system &>/dev/null && log "✓ qemu" || FAILED+=("qemu")
 command -v qemu-img           &>/dev/null && log "✓ qemu-img"                   || FAILED+=("qemu-img")
 command -v curl               &>/dev/null && log "✓ curl"                       || FAILED+=("curl")
 command -v git                &>/dev/null && log "✓ git"                        || FAILED+=("git")
