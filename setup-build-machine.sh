@@ -158,7 +158,9 @@ install_debian() {
     log "libvirtd enabled and started"
 
     step "Installing Packer"
-    # Add HashiCorp GPG key
+    PACKER_VERSION="1.11.0"
+
+    # Try HashiCorp apt repo first
     curl -fsSL https://apt.releases.hashicorp.com/gpg \
         | gpg --dearmor \
         | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
@@ -176,8 +178,22 @@ https://apt.releases.hashicorp.com ${HASHICORP_CODENAME} main" \
         | tee /etc/apt/sources.list.d/hashicorp.list
 
     apt-get update -qq
-    apt-get install -y -qq packer
-    log "Packer installed"
+    apt-get install -y -qq packer 2>/dev/null || true
+
+    # Fallback — install binary directly if apt failed
+    if ! command -v packer &>/dev/null; then
+        warn "apt install failed — installing Packer binary directly"
+        wget -q -O /tmp/packer.zip \
+            "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip"
+        unzip -q /tmp/packer.zip -d /tmp
+        mv /tmp/packer /usr/local/bin/packer
+        chmod +x /usr/local/bin/packer
+        rm -f /tmp/packer.zip
+    fi
+
+    command -v packer &>/dev/null && \
+        log "Packer installed: $(packer --version)" || \
+        err "Packer installation failed — check internet connectivity"
 
     step "Installing utilities"
     apt-get install -y -qq \
